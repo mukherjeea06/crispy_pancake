@@ -98,6 +98,29 @@ sys_kill(void)
   return kkill(pid);
 }
 
+uint64
+sys_getfilenum(void)
+{
+  int pid;
+  struct proc *p;
+  int count = 0;
+
+  argint(0, &pid);
+
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->pid == pid){
+      for(int i = 0; i < NOFILE; i++){
+        if(p->ofile[i] != 0){
+          count++;
+        }
+      }
+      return count;
+    }
+  }
+
+  return -1;
+}
+
 // return how many clock tick interrupts have occurred
 // since start.
 uint64
